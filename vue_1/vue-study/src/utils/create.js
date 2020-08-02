@@ -5,8 +5,8 @@ import Vue from 'vue'
 // 老杨带你来搬砖
 function create(Component, props) {
   const Ctor = Vue.extend(Component)
-  const newCtor =  new Ctor({propsData:props})
-  document.body.appendChild(newCtor.$sel)
+  const vm =  new Ctor({propsData:props})
+  document.body.appendChild(vm.$sel)
   
   // 1.构建Component的实例
   // const vm = new Vue({
