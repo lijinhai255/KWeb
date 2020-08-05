@@ -4,7 +4,7 @@ class Store {
   constructor(options) {
     this._mutations = options.mutations
     this._actions = options.actions
-    
+    options.getters && this.handleGetters(options.getters)
     // 创建响应式的state
     // this.$store.state.counter
     this._vm = new _Vue({
@@ -21,7 +21,7 @@ class Store {
     this.dispatch = this.dispatch.bind(this)
 
     // getters
-    this.getters = {}
+
     // computed
   }
 
@@ -61,6 +61,19 @@ class Store {
 
     // 传入当前Store实例做上下文
     return fn(this, payload)
+  }
+  handleGetters(getters) {
+    this.getters = {};
+    // 遍历getters所有key
+    Object.keys(getters).forEach(key => {
+        // 为this.getters定义若干属性，这些属性是只读的
+        // $store.getters.score
+        Object.defineProperty(this.getters, key, {
+            get: () => {
+                return getters[key](this.state);
+            }
+        })
+    })
   }
 
 }
