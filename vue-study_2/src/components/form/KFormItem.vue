@@ -10,27 +10,32 @@
 
 <script>
 import Validator from "async-validator";
-
+import emitter from "@/mixins/emitter.js";
 export default {
-  name:"KFormItem",
-  componentName:"KFormItem",
+  name: "KFormItem",
+  componentName: "KFormItem",
   inject: ["form"],
+  mixins: [emitter],
   data() {
     return {
-      error: ""
+      error: "",
     };
   },
   props: {
     label: {
       type: String,
-      default: ""
+      default: "",
     },
-    prop: String
+    prop: String,
   },
   mounted() {
     this.$on("validate", () => {
       this.validate();
     });
+    // 派发事件 同志Kform 新增KFItem 实力
+    if (this.props) {
+      this.dispatch("KForm", "form.item", [this]);
+    }
   },
   methods: {
     validate() {
@@ -42,15 +47,15 @@ export default {
       // 创建一个校验器实例
       const validator = new Validator({ [this.prop]: rules });
       // 校验, 返回Promise
-      return validator.validate({ [this.prop]: value}, errors => {
+      return validator.validate({ [this.prop]: value }, (errors) => {
         if (errors) {
-          this.error = errors[0].message
+          this.error = errors[0].message;
         } else {
-          this.error = ''
+          this.error = "";
         }
-      })
-    }
-  }
+      });
+    },
+  },
 };
 </script>
 
